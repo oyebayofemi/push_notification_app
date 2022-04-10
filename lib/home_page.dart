@@ -51,6 +51,8 @@ class _MyHomePageState extends State<MyHomePage> {
               background: Colors.blue);
         }
       });
+    } else {
+      print('Notification permission declined by user!!');
     }
   }
 
@@ -89,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: 9,
                         ),
                         Text(
-                            'TITLE: ${_notificationInfo!.dataBody ?? _notificationInfo!.body}')
+                            'BODY: ${_notificationInfo!.dataBody ?? _notificationInfo!.body}')
                       ],
                     )
                   : Container(),
