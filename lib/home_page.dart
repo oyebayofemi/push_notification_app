@@ -58,6 +58,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      PushNotificationModel notification = PushNotificationModel(
+          body: message.notification!.body,
+          title: message.notification!.title,
+          dataBody: message.data['body'],
+          dataTitle: message.data['title']);
+
+      setState(() {
+        _totalNotificationCounter++;
+        _notificationInfo = notification;
+      });
+    });
+
     registerNotification();
     super.initState();
     _totalNotificationCounter = 0;
