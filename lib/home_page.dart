@@ -56,8 +56,33 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  checkForInitialMessage() async {
+    await Firebase.initializeApp();
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      PushNotificationModel notification = PushNotificationModel(
+          body: initialMessage.notification!.body,
+          title: initialMessage.notification!.title,
+          dataBody: initialMessage.data['body'],
+          dataTitle: initialMessage.data['title']);
+
+      setState(() {
+        _totalNotificationCounter++;
+        _notificationInfo = notification;
+      });
+    }
+  }
+
   @override
   void initState() {
+    //normal notification
+    registerNotification();
+    //when app is terminated
+    checkForInitialMessage();
+    _totalNotificationCounter = 0;
+    //Norification for when app is in background
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       PushNotificationModel notification = PushNotificationModel(
           body: message.notification!.body,
@@ -71,9 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
 
-    registerNotification();
     super.initState();
-    _totalNotificationCounter = 0;
   }
 
   @override
